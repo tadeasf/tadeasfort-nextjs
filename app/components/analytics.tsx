@@ -12,6 +12,9 @@ export function Analytics() {
 
     // Send a POST request to your `/api/incr` endpoint
     axios.post('/api/incr', { slug })
+      .then(response => {
+        console.log('Response:', response);
+      })
       .catch(error => {
         console.error('Error incrementing page view count:', error);
       });
