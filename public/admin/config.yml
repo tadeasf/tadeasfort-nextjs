@@ -13,15 +13,22 @@ collections:
     folder: "content/projects"
     create: true
     slug: "{{slug}}"
+    extension: mdx
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text" }
       - { label: "Date", name: "date", widget: "date" }
-      - { label: "URL", name: "url", widget: "string" }
-      - { label: "Repository", name: "repository", widget: "string" }
+      - { label: "URL", name: "url", widget: "string", required: false }
+      - {
+          label: "Repository",
+          name: "repository",
+          widget: "string",
+          required: false,
+        }
       - {
           label: "Published",
           name: "published",
           widget: "boolean",
           default: true,
         }
+      - { label: "Body", name: "body", widget: "markdown" }
