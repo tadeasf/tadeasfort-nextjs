@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import supabase from 'util/supabaseClient'
+import {supabase} from 'util/supabaseClient'
 
 export const config = {
 	runtime: "edge",
@@ -33,23 +33,35 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 			.join("");
 
 		// deduplicate the ip for each slug
-		const { data: isNew, error } = await supabase
+		const { error: upsertError } = await supabase
 			.from('deduplicate')
-			.insert([
+			.upsert([
 				{ hash: hash, slug: slug }
-			], { upsert: true })
-		if (error) {
+			]);
+		if (upsertError) {
 			return new NextResponse("Error inserting data", { status: 500 });
 		}
-		if (!isNew) {
-			new NextResponse(null, { status: 202 });
-		}
 	}
-	const { data, error } = await supabase
+	// Fetch the current count
+	const { data: currentData, error: fetchError } = await supabase
 		.from('pageviews')
-		.update({ count: supabase.raw('count + 1') })
-		.eq('slug', slug)
-	if (error) {
+		.select('count')
+		.eq('slug', slug);
+
+	if (fetchError) {
+		return new NextResponse("Error fetching data", { status: 500 });
+	}
+
+	// Increment the count
+	const newCount = currentData[0].count + 1;
+
+	// Update the row with the new count
+	const { error: updateError } = await supabase
+		.from('pageviews')
+		.update({ count: newCount })
+		.eq('slug', slug);
+
+	if (updateError) {
 		return new NextResponse("Error updating data", { status: 500 });
 	}
 	return new NextResponse(null, { status: 202 });
