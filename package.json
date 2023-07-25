@@ -36,6 +36,7 @@
     "@opentelemetry/api": "^1.4.1",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
+    "@types/axios": "^0.14.0",
     "autoprefixer": "^10.4.13",
     "pnpm": "^8.6.10",
     "postcss": "^8.4.21",

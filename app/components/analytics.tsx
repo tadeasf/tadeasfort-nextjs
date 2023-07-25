@@ -1,15 +1,30 @@
 "use client";
 
+import React from 'react';
+
 export function Analytics() {
-	const token = process.env.NEXT_PUBLIC_BEAM_TOKEN;
-	if (!token) {
-		return null;
-	}
-	return (
-		<script
-			src="https://beamanalytics.b-cdn.net/beam.min.js"
-			data-token={token}
-			async
-		/>
-	);
+  const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+
+  if (!googleAnalyticsId) {
+    return null;
+  }
+
+  return (
+    <>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+      />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}');
+          `,
+        }}
+      />
+    </>
+  );
 }

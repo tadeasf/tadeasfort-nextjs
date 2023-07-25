@@ -3,7 +3,6 @@ import { Inter } from "@next/font/google";
 import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
-import { usePageView } from '../hooks/usePageView';
 
 export const metadata: Metadata = {
 
@@ -62,7 +61,6 @@ const inter = Inter({
   }: {
 	children: React.ReactNode;
   }) {
-	usePageView();
 	return (
 	  <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
 		<head>
