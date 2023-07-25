@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+tadeasfort-nextjs.code-workspace
+.vscode
 /.pnp
 .pnp.js
 .env

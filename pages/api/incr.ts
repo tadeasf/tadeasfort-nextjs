@@ -1,7 +1,6 @@
-import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import supabase from 'util/supabaseClient'
 
-const redis = Redis.fromEnv();
 export const config = {
 	runtime: "edge",
 };
@@ -34,14 +33,24 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 			.join("");
 
 		// deduplicate the ip for each slug
-		const isNew = await redis.set(["deduplicate", hash, slug].join(":"), true, {
-			nx: true,
-			ex: 24 * 60 * 60,
-		});
+		const { data: isNew, error } = await supabase
+			.from('deduplicate')
+			.insert([
+				{ hash: hash, slug: slug }
+			], { upsert: true })
+		if (error) {
+			return new NextResponse("Error inserting data", { status: 500 });
+		}
 		if (!isNew) {
 			new NextResponse(null, { status: 202 });
 		}
 	}
-	await redis.incr(["pageviews", "projects", slug].join(":"));
+	const { data, error } = await supabase
+		.from('pageviews')
+		.update({ count: supabase.raw('count + 1') })
+		.eq('slug', slug)
+	if (error) {
+		return new NextResponse("Error updating data", { status: 500 });
+	}
 	return new NextResponse(null, { status: 202 });
 }
