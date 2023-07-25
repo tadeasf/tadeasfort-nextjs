@@ -95,34 +95,34 @@ export default async function ProjectsPage() {
 				<div className="hidden w-full h-px md:block bg-zinc-800" />
 
 				<div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
-					<div className="grid grid-cols-1 gap-4">
-						{sorted
-							.filter((_, i) => i % 3 === 0)
-							.map((project) => (
-								<Card key={project.slug}>
-									<Article project={project} views={views[project.slug] ?? 0} />
-								</Card>
-							))}
-					</div>
-					<div className="grid grid-cols-1 gap-4">
-						{sorted
-							.filter((_, i) => i % 3 === 1)
-							.map((project) => (
-								<Card key={project.slug}>
-									<Article project={project} views={views[project.slug] ?? 0} />
-								</Card>
-							))}
-					</div>
-					<div className="grid grid-cols-1 gap-4">
-						{sorted
-							.filter((_, i) => i % 3 === 2)
-							.map((project) => (
-								<Card key={project.slug}>
-									<Article project={project} views={views[project.slug] ?? 0} />
-								</Card>
-							))}
-					</div>
-				</div>
+    <div className="grid grid-cols-1 gap-4">
+        {remainingProjects
+            .filter((_, i) => i % 3 === 0)
+            .map((project) => (
+                <Card key={project.slug}>
+                    <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+            ))}
+    </div>
+    <div className="grid grid-cols-1 gap-4">
+        {remainingProjects
+            .filter((_, i) => i % 3 === 1)
+            .map((project) => (
+                <Card key={project.slug}>
+                    <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+            ))}
+    </div>
+    <div className="grid grid-cols-1 gap-4">
+        {remainingProjects
+            .filter((_, i) => i % 3 === 2)
+            .map((project) => (
+                <Card key={project.slug}>
+                    <Article project={project} views={views[project.slug] ?? 0} />
+                </Card>
+            ))}
+    </div>
+</div>
 			</div>
 		</div>
 	);
