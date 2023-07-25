@@ -4,7 +4,7 @@ import { Mdx } from "@/app/components/mdx";
 import { Header } from "./header";
 import "./mdx.css";
 import { ReportView } from "./view";
-import { Redis } from "@upstash/redis";
+import {supabase} from 'util/supabaseClient';
 
 export const revalidate = 60;
 
@@ -13,8 +13,6 @@ type Props = {
 		slug: string;
 	};
 };
-
-const redis = Redis.fromEnv();
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
 	return allProjects
@@ -31,9 +29,19 @@ export default async function PostPage({ params }: Props) {
 	if (!project) {
 		notFound();
 	}
+	let views = 0; // default value
 
-	const views =
-		(await redis.get<number>(["pageviews", "projects", slug].join(":"))) ?? 0;
+	const { data, error } = await supabase
+		.from('pageviews')
+		.select('count')
+		.eq('slug', slug);
+	
+	if (error) {
+		console.error('Error fetching views: ', error);
+	} else if (data && data.length > 0) {
+		views = data[0].count;
+	}
+	
 
 	return (
 		<div className="bg-zinc-50 min-h-screen">

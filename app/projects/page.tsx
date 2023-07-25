@@ -4,21 +4,23 @@ import { allProjects } from "contentlayer/generated";
 import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
 import { Article } from "./article";
-import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
-
-const redis = Redis.fromEnv();
+import {supabase} from 'util/supabaseClient';
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-	const views = (
-		await redis.mget<number[]>(
-			...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
-		)
-	).reduce((acc, v, i) => {
-		acc[allProjects[i].slug] = v ?? 0;
+	let { data: viewsData, error } = await supabase
+		.from('pageviews')
+		.select('slug, count');
+	if (error) {
+		console.error("Error fetching pageviews:", error);
+		viewsData = [];
+	}
+	const views = viewsData.reduce((acc: Record<string, number>, v: { slug: string, count: number }) => {
+		acc[v.slug] = v.count;
 		return acc;
 	}, {} as Record<string, number>);
+	
 
 	// Sort projects by views
 	const sortedByViews = [...allProjects].sort((a, b) => views[b.slug] - views[a.slug]);
@@ -95,34 +97,34 @@ export default async function ProjectsPage() {
 				<div className="hidden w-full h-px md:block bg-zinc-800" />
 
 				<div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
-    <div className="grid grid-cols-1 gap-4">
-        {remainingProjects
-            .filter((_, i) => i % 3 === 0)
-            .map((project) => (
-                <Card key={project.slug}>
-                    <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-            ))}
-    </div>
-    <div className="grid grid-cols-1 gap-4">
-        {remainingProjects
-            .filter((_, i) => i % 3 === 1)
-            .map((project) => (
-                <Card key={project.slug}>
-                    <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-            ))}
-    </div>
-    <div className="grid grid-cols-1 gap-4">
-        {remainingProjects
-            .filter((_, i) => i % 3 === 2)
-            .map((project) => (
-                <Card key={project.slug}>
-                    <Article project={project} views={views[project.slug] ?? 0} />
-                </Card>
-            ))}
-    </div>
-</div>
+					<div className="grid grid-cols-1 gap-4">
+						{remainingProjects
+							.filter((_, i) => i % 3 === 0)
+							.map((project) => (
+								<Card key={project.slug}>
+									<Article project={project} views={views[project.slug] ?? 0} />
+								</Card>
+							))}
+					</div>
+					<div className="grid grid-cols-1 gap-4">
+						{remainingProjects
+							.filter((_, i) => i % 3 === 1)
+							.map((project) => (
+								<Card key={project.slug}>
+									<Article project={project} views={views[project.slug] ?? 0} />
+								</Card>
+							))}
+					</div>
+					<div className="grid grid-cols-1 gap-4">
+						{remainingProjects
+							.filter((_, i) => i % 3 === 2)
+							.map((project) => (
+								<Card key={project.slug}>
+									<Article project={project} views={views[project.slug] ?? 0} />
+								</Card>
+							))}
+					</div>
+				</div>
 			</div>
 		</div>
 	);
