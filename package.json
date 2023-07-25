@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently \"npm run start-backend\" \"npm run dev\"",
+    "start-backend": "node backend/server.js",
     "fmt": "pnpm rome check . --apply-suggested && pnpm rome format . --write"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "@types/react-dom": "18.2.4",
     "@upstash/redis": "^1.20.6",
     "contentlayer": "^0.3.0",
+    "express": "^4.18.2",
     "framer-motion": "^10.12.12",
     "lucide-react": "^0.220.0",
     "markdown-wasm": "^1.2.0",
@@ -35,6 +37,8 @@
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.13",
+    "concurrently": "^8.2.0",
+    "pnpm": "^8.6.10",
     "postcss": "^8.4.21",
     "postcss-nesting": "^11.2.2",
     "rome": "^11.0.0",
