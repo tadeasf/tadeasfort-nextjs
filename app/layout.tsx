@@ -3,8 +3,10 @@ import { Inter } from "@next/font/google";
 import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
+import { usePageView } from '../hooks/usePageView';
 
 export const metadata: Metadata = {
+
 	title: {
 		default: "tadeasfort.com",
 		template: "%s | tadeasfort.com",
@@ -48,30 +50,33 @@ export const metadata: Metadata = {
 const inter = Inter({
 	subsets: ["latin"],
 	variable: "--font-inter",
-});
-
-const calSans = LocalFont({
+  });
+  
+  const calSans = LocalFont({
 	src: "../public/fonts/CalSans-SemiBold.ttf",
 	variable: "--font-calsans",
-});
-
-export default function RootLayout({
+  });
+  
+  export default function RootLayout({
 	children,
-}: {
+  }: {
 	children: React.ReactNode;
-}) {
+  }) {
+	usePageView(); // use the hook here
+  
 	return (
-		<html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
-			<head>
-				<Analytics />
-			</head>
-			<body
-				className={`bg-black ${
-					process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-				}`}
-			>
-				{children}
-			</body>
-		</html>
+	  <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
+		<head>
+		  <Analytics />
+		</head>
+		<body
+		  className={`bg-black ${
+			process.env.NODE_ENV === "development" ? "debug-screens" : undefined
+		  }`}
+		>
+		  {children}
+		</body>
+	  </html>
 	);
-}
+  }
+  
