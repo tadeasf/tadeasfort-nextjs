@@ -52,6 +52,17 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 		return new NextResponse("Error fetching data", { status: 500 });
 	}
 
+	// If the slug doesn't exist in the pageviews table, insert a new row
+	if (!currentData || currentData.length === 0) {
+		const { error: insertError } = await supabase
+			.from('pageviews')
+			.insert([{ slug: slug, count: 1 }]);
+		if (insertError) {
+			return new NextResponse("Error inserting data", { status: 500 });
+		}
+		return new NextResponse(null, { status: 202 });
+	}
+
 	// Increment the count
 	const newCount = currentData[0].count + 1;
 
