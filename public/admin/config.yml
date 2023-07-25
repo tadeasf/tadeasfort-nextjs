@@ -14,21 +14,22 @@ collections:
     create: true
     slug: "{{slug}}"
     extension: mdx
+    format: "frontmatter"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text" }
       - { label: "Date", name: "date", widget: "date" }
       - { label: "URL", name: "url", widget: "string", required: false }
       - {
-          label: "Repository",
-          name: "repository",
-          widget: "string",
-          required: false,
-        }
-      - {
           label: "Published",
           name: "published",
           widget: "boolean",
           default: true,
+        }
+      - {
+          label: "Repository",
+          name: "repository",
+          widget: "string",
+          required: false,
         }
       - { label: "Body", name: "body", widget: "markdown" }
