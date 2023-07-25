@@ -21,6 +21,7 @@
     "framer-motion": "^10.12.12",
     "lucide-react": "^0.220.0",
     "markdown-wasm": "^1.2.0",
+    "netlify-cms": "^2.10.192",
     "next": "13.4.3",
     "next-contentlayer": "^0.3.0",
     "react": "18.2.0",
