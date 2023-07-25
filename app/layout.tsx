@@ -4,7 +4,6 @@ import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
 import { usePageView } from '../hooks/usePageView';
-import PageView from "./components/pageView";
 
 export const metadata: Metadata = {
 
@@ -63,6 +62,7 @@ const inter = Inter({
   }: {
 	children: React.ReactNode;
   }) {
+	usePageView();
 	return (
 	  <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
 		<head>
@@ -73,7 +73,6 @@ const inter = Inter({
 			process.env.NODE_ENV === "development" ? "debug-screens" : undefined
 		  }`}
 		>
-		  <PageView /> {/* use the component here */}
 		  {children}
 		</body>
 	  </html>

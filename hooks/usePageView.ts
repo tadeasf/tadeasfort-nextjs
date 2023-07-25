@@ -6,14 +6,14 @@ export function usePageView() {
   const router = useRouter();
 
   useEffect(() => {
-    const incrementPageView = async () => {
-      try {
-        await axios.post('/api/incr', { slug: router.asPath });
-      } catch (error) {
-        console.error('Failed to increment page view:', error);
-      }
+    const handleRouteChange = (url: URL) => {
+      axios.post('/api/pageview', { path: url });
     };
 
-    incrementPageView();
-  }, [router.asPath]);
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 }
