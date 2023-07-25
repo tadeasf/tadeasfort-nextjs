@@ -16,11 +16,10 @@ export default async function ProjectsPage() {
 		console.error("Error fetching pageviews:", error);
 		viewsData = [];
 	}
-	const views = viewsData.reduce((acc: Record<string, number>, v: { slug: string, count: number }) => {
+	const views = viewsData ? viewsData.reduce((acc: Record<string, number>, v: { slug: string, count: number }) => {
 		acc[v.slug] = v.count;
 		return acc;
-	}, {} as Record<string, number>);
-	
+	}, {} as Record<string, number>) : {};
 
 	// Sort projects by views
 	const sortedByViews = [...allProjects].sort((a, b) => views[b.slug] - views[a.slug]);
@@ -106,7 +105,7 @@ export default async function ProjectsPage() {
 								</Card>
 							))}
 					</div>
-					<div className="grid grid-cols-1 gap-4">
+						<div className="grid grid-cols-1 gap-4">
 						{remainingProjects
 							.filter((_, i) => i % 3 === 1)
 							.map((project) => (
