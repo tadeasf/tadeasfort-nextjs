@@ -5,9 +5,9 @@ backend:
   branch: main # Branch to update (optional; defaults to master)
 
 media_folder: "public/img" # Folder where user uploaded files should go
-public_folder: "/img" # Public path for the media_folder
+public_folder: "/img" # Folder path where uploaded files will be accessed
 
-collections:
+collections: # A list of collections the CMS should be aware of
   - name: "projects" # Used in routes, e.g., /admin/collections/blog
     label: "Projects" # Used in the UI
     folder: "content/projects" # The path to the folder where the documents are stored
@@ -15,4 +15,9 @@ collections:
     slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
     fields: # The fields for each document, usually in front matter
       - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Date", name: "date", widget: "date" }
+      - { label: "URL", name: "url", widget: "string" }
+      - { label: "Published", name: "published", widget: "boolean" }
+      - { label: "Repository", name: "repository", widget: "string" }
       - { label: "Body", name: "body", widget: "markdown" }
