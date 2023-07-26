@@ -27,9 +27,6 @@ export default function Auth() {
     };
   }, []);
   
-  
-  
-  
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -47,23 +44,17 @@ export default function Auth() {
       return;
     }
   
-    let error;
-    if (isLogin) {
-      const response = await (supabase.auth as any).signIn({ email, password });
-      error = response.error;
-      if (!error) {
-        setMessage('You are now logged in!');
-      }
-    } else {
-      const response = await (supabase.auth as any).signUp({ email, password });
-      error = response.error;
-      if (!error) {
-        setMessage('Check your email for a confirmation link!');
-      }
-    }
+    const { data, error } = isLogin
+      ? await (supabase.auth as any).signIn({ email, password })
+      : await (supabase.auth as any).signUp({ email, password });
+  
+    console.log('data:', data);
+    console.log('error:', error);
   
     if (error) {
       setMessage(error.message);
+    } else {
+      setMessage(isLogin ? 'You are now logged in!' : 'Check your email for a confirmation link!');
     }
   
     setLoading(false);
