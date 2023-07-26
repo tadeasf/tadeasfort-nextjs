@@ -22,10 +22,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
   toggleIsLogin,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-2 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-transparent text-white pt-10 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             {isLogin ? 'Log in' : 'Sign up'}
           </h2>
         </div>

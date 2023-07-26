@@ -54,7 +54,7 @@ export default function Auth() {
 
   return (
     <ProjectsLayout>
-      <div className="relative pb-16">
+      <div className="relative pb-16 bg-gradient-to-r">
         <Navigation />
         <div className="px-6 pt-16 mx-auto space-y-8 max-w-7xl lg:px-8 md:space-y-16 md:pt-24 lg:pt-32">
           <div className="max-w-2xl mx-auto lg:mx-0">
@@ -65,15 +65,12 @@ export default function Auth() {
               Please {isLoggedIn ? 'logout' : 'login or sign up'} to continue.
             </p>
           </div>
-          <div className="w-full h-px bg-zinc-800" />
-          <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
-            <div className="w-full max-w-md mx-auto lg:mx-0">
               {isLoggedIn ? (
                 <div>
                   <button
                     onClick={handleLogout}
                     className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-                  >
+                    >
                     Logout
                   </button>
                 </div>
@@ -88,10 +85,8 @@ export default function Auth() {
                   toggleIsLogin={() => setIsLogin(!isLogin)}
                 />
               )}
-            </div>
-          </div>
         </div>
-      </div>
+        </div>
     </ProjectsLayout>
   );
 }
