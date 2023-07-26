@@ -1,7 +1,6 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../util/supabaseClient';
-import { useRouter } from 'next/router';
 import { Session } from '@supabase/supabase-js';
 import AuthForm from 'app/components/authForm';
 import { Navigation } from 'app/components/nav';
@@ -12,57 +11,62 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (event === 'SIGNED_IN') {
-          router.push('/'); // redirect to home page after login
+          setIsLoggedIn(true); // Set login status to true
         } else if (event === 'SIGNED_OUT') {
-          router.push('/auth'); // redirect to auth page after logout
+          setIsLoggedIn(false); // Set login status to false
         }
       }
     );
-  
+
     return () => {
       authListener.subscription.unsubscribe();
     };
   }, []);
-  
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-  
+
     const { email, password } = form;
-  
+
     if (!email || !password) {
       setMessage('Email and password must be provided');
       setLoading(false);
       return;
     }
-  
+
     const { data, error } = isLogin
       ? await supabase.auth.signInWithPassword({ email, password })
       : await supabase.auth.signUp({ email, password });
-   
+
     console.log('data:', data);
     console.log('error:', error);
-  
+
     if (error) {
       setMessage(error.message);
     } else {
       setMessage(isLogin ? 'You are now logged in!' : 'Check your email for a confirmation link!');
+      setIsLoggedIn(true); // Set login status to true after successful login
     }
-  
+
     setLoading(false);
   };
-  
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsLoggedIn(false); // Set login status to false after logout
+  };
 
   return (
     <ProjectsLayout>
@@ -74,25 +78,36 @@ export default function Auth() {
               Authentication
             </h2>
             <p className="mt-4 text-zinc-400">
-              Please login or sign up to continue.
+              Please {isLoggedIn ? 'logout' : 'login or sign up'} to continue.
             </p>
           </div>
           <div className="w-full h-px bg-zinc-800" />
           <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
             <div className="w-full max-w-md mx-auto lg:mx-0">
-              <AuthForm
-                form={form}
-                isLogin={isLogin}
-                message={message}
-                loading={loading}
-                handleFormChange={handleFormChange}
-                handleFormSubmit={handleFormSubmit}
-                toggleIsLogin={() => setIsLogin(!isLogin)}
-              />
+              {isLoggedIn ? ( // Conditionally render based on login status
+                <div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <AuthForm
+                  form={form}
+                  isLogin={isLogin}
+                  message={message}
+                  loading={loading}
+                  handleFormChange={handleFormChange}
+                  handleFormSubmit={handleFormSubmit}
+                  toggleIsLogin={() => setIsLogin(!isLogin)}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
     </ProjectsLayout>
   );
-};
+}
