@@ -38,25 +38,37 @@ export default function Auth() {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-
+  
     const { email, password } = form;
-
+  
     if (!email || !password) {
       setMessage('Email and password must be provided');
       setLoading(false);
       return;
     }
-
-    const { error } = isLogin
-    ? await (supabase.auth as any).signIn({ email, password })
-    : await (supabase.auth as any).signUp({ email, password });
-
+  
+    let error;
+    if (isLogin) {
+      const response = await (supabase.auth as any).signIn({ email, password });
+      error = response.error;
+      if (!error) {
+        setMessage('You are now logged in!');
+      }
+    } else {
+      const response = await (supabase.auth as any).signUp({ email, password });
+      error = response.error;
+      if (!error) {
+        setMessage('Check your email for a confirmation link!');
+      }
+    }
+  
     if (error) {
       setMessage(error.message);
     }
-
+  
     setLoading(false);
   };
+  
 
   return (
     <AuthForm
