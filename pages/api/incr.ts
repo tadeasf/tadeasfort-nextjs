@@ -6,6 +6,8 @@ export const config = {
 };
 
 export default async function incr(req: NextRequest): Promise<NextResponse> {
+	console.log('Received a request to /api/incr');
+
 	if (req.method !== "POST") {
 		return new NextResponse("use POST", { status: 405 });
 	}
@@ -21,7 +23,10 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 	if (!slug) {
 		return new NextResponse("Slug not found", { status: 400 });
 	}
+	console.log(`Slug: ${slug}`);
+
 	const ip = req.ip;
+	console.log(`IP: ${ip}`);
 	if (ip) {
 		// Hash the IP in order to not store it directly in your db.
 		const buf = await crypto.subtle.digest(
@@ -32,6 +37,8 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 			.map((b) => b.toString(16).padStart(2, "0"))
 			.join("");
 
+		console.log(`Hash: ${hash}`);
+
 		// deduplicate the ip for each slug
 		const { error: upsertError } = await supabase
 			.from('deduplicate')
@@ -39,9 +46,11 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 				{ hash: hash, slug: slug }
 			]);
 		if (upsertError) {
+			console.error('Error inserting data:', upsertError);
 			return new NextResponse("Error inserting data", { status: 500 });
 		}
 	}
+
 	// Fetch the current count
 	const { data: currentData, error: fetchError } = await supabase
 		.from('pageviews')
@@ -49,6 +58,7 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 		.eq('slug', slug);
 
 	if (fetchError) {
+		console.error('Error fetching data:', fetchError);
 		return new NextResponse("Error fetching data", { status: 500 });
 	}
 
@@ -58,6 +68,7 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 			.from('pageviews')
 			.insert([{ slug: slug, count: 1 }]);
 		if (insertError) {
+			console.error('Error inserting data:', insertError);
 			return new NextResponse("Error inserting data", { status: 500 });
 		}
 		return new NextResponse(null, { status: 202 });
@@ -73,6 +84,7 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
 		.eq('slug', slug);
 
 	if (updateError) {
+		console.error('Error updating data:', updateError);
 		return new NextResponse("Error updating data", { status: 500 });
 	}
 	return new NextResponse(null, { status: 202 });
