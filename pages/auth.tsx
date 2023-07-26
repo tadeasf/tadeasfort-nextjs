@@ -3,7 +3,7 @@ import { supabase } from '../util/supabaseClient';
 import { useRouter } from 'next/router';
 import { Session } from '@supabase/supabase-js';
 import AuthForm from 'app/components/authForm';
-
+import { Navigation } from 'app/components/nav'; // Import Navigation component
 export default function Auth() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLogin, setIsLogin] = useState(true);
@@ -62,14 +62,17 @@ export default function Auth() {
   
 
   return (
-    <AuthForm
-      form={form}
-      isLogin={isLogin}
-      message={message}
-      loading={loading}
-      handleFormChange={handleFormChange}
-      handleFormSubmit={handleFormSubmit}
-      toggleIsLogin={() => setIsLogin(!isLogin)}
-    />
+    <div className="relative pb-16">
+      <Navigation /> {/* Include Navigation component */}
+      <AuthForm
+        form={form}
+        isLogin={isLogin}
+        message={message}
+        loading={loading}
+        handleFormChange={handleFormChange}
+        handleFormSubmit={handleFormSubmit}
+        toggleIsLogin={() => setIsLogin(!isLogin)}
+      />
+    </div>
   );
 };
