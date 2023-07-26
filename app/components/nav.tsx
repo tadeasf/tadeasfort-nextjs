@@ -40,6 +40,12 @@ export const Navigation: React.FC = () => {
 						>
 							Contact
 						</Link>
+						<Link
+							href="/auth"
+							className="duration-200 text-zinc-400 hover:text-zinc-100"
+						>
+							Auth
+						</Link>
 					</div>
 
 					<Link

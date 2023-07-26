@@ -78,15 +78,17 @@ export default function Auth() {
           </div>
           <div className="w-full h-px bg-zinc-800" />
           <div className="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 ">
-            <AuthForm
-              form={form}
-              isLogin={isLogin}
-              message={message}
-              loading={loading}
-              handleFormChange={handleFormChange}
-              handleFormSubmit={handleFormSubmit}
-              toggleIsLogin={() => setIsLogin(!isLogin)}
-            />
+            <div className="w-full max-w-md mx-auto lg:mx-0">
+              <AuthForm
+                form={form}
+                isLogin={isLogin}
+                message={message}
+                loading={loading}
+                handleFormChange={handleFormChange}
+                handleFormSubmit={handleFormSubmit}
+                toggleIsLogin={() => setIsLogin(!isLogin)}
+              />
+            </div>
           </div>
         </div>
       </div>
